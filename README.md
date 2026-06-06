@@ -1,2 +1,2 @@
-# cursogolang
-Curso Go Exemplos
+# Curso de Go 
+Exemplos dos códigos, separados por aulas, com respectivos desafios
