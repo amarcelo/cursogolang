@@ -6,7 +6,6 @@ import (
 )
 
 var nome string = "Maria"
-var soma int = 10
 
 //Executando o init
 
@@ -28,5 +27,4 @@ func main() {
 
 func imprimeglobal() {
 	fmt.Println("Nome Global: ", nome)
-	fmt.Println("Soma Global: ", soma)
 }
