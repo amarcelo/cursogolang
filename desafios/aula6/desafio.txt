@@ -1,0 +1,189 @@
+# Exercício Desafio: Cadastro de Participantes de um Evento
+
+## Objetivo
+
+Neste exercício você irá praticar:
+
+* Criação de slices
+* Uso do `make()`
+* Uso do `append()`
+* Uso de `len()`
+* Uso de `cap()`
+* Percorrer slices com `range`
+
+---
+
+## Cenário
+
+Você foi contratado para desenvolver um sistema simples de cadastro para um evento.
+
+O sistema deve armazenar os nomes dos participantes conforme eles vão chegando.
+
+Como você não sabe quantas pessoas irão se inscrever, deverá utilizar um **slice**.
+
+---
+
+## Requisitos
+
+### 1. Crie um slice usando `make()`
+
+O slice deverá armazenar nomes (`string`).
+
+```go
+participantes := make(...)
+```
+
+---
+
+### 2. Adicione os participantes
+
+Cadastre os seguintes nomes utilizando `append()`:
+
+* Maria
+* João
+* Pedro
+* Ana
+* Carlos
+
+---
+
+### 3. Exiba informações do slice
+
+Mostre:
+
+```text
+Quantidade de participantes:
+Capacidade atual:
+```
+
+Utilize:
+
+```go
+len()
+cap()
+```
+
+---
+
+### 4. Liste todos os participantes
+
+A saída deverá ser parecida com:
+
+```text
+1 - Maria
+2 - João
+3 - Pedro
+4 - Ana
+5 - Carlos
+```
+
+Utilize:
+
+```go
+for range
+```
+
+---
+
+## Saída Esperada
+
+```text
+Participantes cadastrados: 5
+
+Capacidade atual: 5
+
+Lista de participantes:
+
+1 - Maria
+2 - João
+3 - Pedro
+4 - Ana
+5 - Carlos
+```
+
+---
+
+# Desafio Bônus
+
+Adicione mais três participantes:
+
+* Fernanda
+* Marcos
+* José
+
+Após adicionar os novos participantes, exiba novamente:
+
+```go
+len(participantes)
+cap(participantes)
+```
+
+### Pergunta
+
+A capacidade continuou a mesma?
+
+Se não, por que o Go aumentou a capacidade?
+
+---
+
+# Desafio Master
+
+Crie um menu simples usando um loop:
+
+```text
+1 - Adicionar participante
+2 - Listar participantes
+3 - Mostrar quantidade
+0 - Sair
+```
+
+Exemplo:
+
+```text
+1 - Adicionar participante
+Digite o nome:
+Antonio
+
+1 - Adicionar participante
+Digite o nome:
+Maria
+
+2 - Listar participantes
+
+1 - Antonio
+2 - Maria
+```
+
+---
+
+## Perguntas para Reflexão
+
+1. Qual a diferença entre `len()` e `cap()`?
+2. O que acontece quando usamos `append()`?
+3. Por que um slice é mais flexível que um array?
+4. O que acontece quando a capacidade do slice é ultrapassada?
+5. Em quais situações do dia a dia você utilizaria slices?
+
+---
+
+## Dica
+
+Antes de executar o programa, tente desenhar o slice na memória:
+
+```text
+[ _ _ _ _ _ ]
+
+len = 0
+cap = 5
+```
+
+Após cada `append()`, atualize o desenho:
+
+```text
+[Maria João Pedro _ _]
+
+len = 3
+cap = 5
+```
+
+Isso ajuda muito a visualizar como os slices funcionam internamente.

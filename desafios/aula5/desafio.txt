@@ -1,0 +1,182 @@
+# Exercício Desafio: Sistema de Pontuação com Closure
+
+## Objetivo
+
+Neste exercício você irá praticar:
+
+* Criação de funções
+* Retorno de funções
+* Closures
+* Variáveis que mantêm seu valor entre chamadas
+* Parâmetros e retorno de valores
+
+---
+
+## Cenário
+
+Você está desenvolvendo um jogo simples.
+
+Cada vez que um jogador vence uma partida, ele ganha pontos.
+
+Sua missão é criar um sistema que mantenha a pontuação acumulada do jogador sem utilizar variáveis globais.
+
+---
+
+## Requisitos
+
+Crie uma função chamada:
+
+```go
+func criarPontuacao() func(int) int
+```
+
+Essa função deverá:
+
+1. Criar uma variável interna chamada `total`.
+2. Inicializar essa variável com zero.
+3. Retornar uma função anônima.
+4. A função anônima deve receber os pontos ganhos na partida.
+5. Somar esses pontos ao total acumulado.
+6. Retornar a pontuação atual.
+
+---
+
+## Exemplo de Uso
+
+O código abaixo deverá funcionar:
+
+```go
+pontos := criarPontuacao()
+
+fmt.Println(pontos(10))
+fmt.Println(pontos(20))
+fmt.Println(pontos(5))
+```
+
+---
+
+## Saída Esperada
+
+```text
+10
+30
+35
+```
+
+---
+
+## Desenho da Solução
+
+```text
+Início
+
+total = 0
+
+↓
+pontos(10)
+
+total = 10
+
+↓
+retorna 10
+
+↓
+pontos(20)
+
+total = 30
+
+↓
+retorna 30
+
+↓
+pontos(5)
+
+total = 35
+
+↓
+retorna 35
+```
+
+---
+
+## Desafio Bônus
+
+Quando a pontuação atingir ou ultrapassar 100 pontos, exiba a mensagem:
+
+```text
+Parabéns! Você atingiu 100 pontos!
+```
+
+### Exemplo
+
+```go
+fmt.Println(pontos(50))
+fmt.Println(pontos(30))
+fmt.Println(pontos(25))
+```
+
+### Saída
+
+```text
+50
+80
+Parabéns! Você atingiu 100 pontos!
+105
+```
+
+---
+
+## Desafio Master
+
+Crie uma função chamada:
+
+```go
+func criarContaBancaria()
+```
+
+Ela deve retornar duas funções:
+
+```go
+depositar(valor int)
+sacar(valor int)
+```
+
+### Exemplo de uso
+
+```go
+depositar, sacar := criarContaBancaria()
+
+depositar(100)
+depositar(50)
+
+fmt.Println(sacar(30))
+fmt.Println(sacar(20))
+```
+
+### Saída Esperada
+
+```text
+Saldo atual: 120
+Saldo atual: 100
+```
+
+### Regra
+
+As duas funções devem compartilhar a mesma variável:
+
+```go
+saldo
+```
+
+utilizando um **closure**.
+
+---
+
+## Perguntas para Reflexão
+
+1. Por que a variável `total` continua existindo mesmo após a execução de `criarPontuacao()`?
+2. O que aconteceria se você chamasse `criarPontuacao()` duas vezes?
+3. Cada contador criado compartilha a mesma variável ou possui sua própria cópia?
+4. Quais vantagens um closure oferece em comparação ao uso de variáveis globais?
+
+**Dica:** Antes de começar a programar, tente desenhar em um papel como o valor da variável `total` muda a cada chamada da função retornada. Isso ajuda muito a entender o conceito de closure.
