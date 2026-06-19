@@ -1,0 +1,199 @@
+# Exercício Desafio: Cadastro de Funcionários com Composição
+
+## Objetivo
+
+Neste exercício você irá praticar:
+
+* Criação de structs
+* Composição de structs
+* Instanciação de estruturas aninhadas
+* Acesso aos campos de structs compostas
+* Organização de dados do mundo real
+
+---
+
+## Cenário
+
+Você foi contratado para desenvolver um sistema simples de cadastro de funcionários.
+
+Cada funcionário possui dados pessoais e um endereço.
+
+Para organizar melhor o código, você deverá utilizar **composição**, criando uma struct para representar o endereço e outra para representar o funcionário.
+
+---
+
+## Passo 1 – Crie a struct Endereco
+
+Ela deve possuir os campos:
+
+```go
+Rua string
+Numero int
+Cidade string
+Estado string
+```
+
+---
+
+## Passo 2 – Crie a struct Funcionario
+
+Ela deve possuir os campos:
+
+```go
+Nome string
+Idade int
+Cargo string
+```
+
+E deve conter uma composição com:
+
+```go
+Endereco
+```
+
+---
+
+## Passo 3 – Cadastre dois funcionários
+
+### Funcionário 1
+
+```text
+Nome: Maria
+Idade: 30
+Cargo: Desenvolvedora
+
+Rua: Rua das Flores
+Número: 100
+Cidade: Rio de Janeiro
+Estado: RJ
+```
+
+### Funcionário 2
+
+```text
+Nome: João
+Idade: 25
+Cargo: Analista
+
+Rua: Avenida Central
+Número: 500
+Cidade: São Paulo
+Estado: SP
+```
+
+---
+
+## Passo 4 – Exiba os dados
+
+A saída deve ser semelhante a:
+
+```text
+=== Funcionário 1 ===
+
+Nome: Maria
+Idade: 30
+Cargo: Desenvolvedora
+
+Endereço:
+Rua: Rua das Flores
+Número: 100
+Cidade: Rio de Janeiro
+Estado: RJ
+
+=== Funcionário 2 ===
+
+Nome: João
+Idade: 25
+Cargo: Analista
+
+Endereço:
+Rua: Avenida Central
+Número: 500
+Cidade: São Paulo
+Estado: SP
+```
+
+---
+
+# Desafio Bônus
+
+Crie um método para a struct `Funcionario`:
+
+```go
+func (f Funcionario) Apresentar()
+```
+
+Que exiba:
+
+```text
+Olá, meu nome é Maria, tenho 30 anos e trabalho como Desenvolvedora.
+```
+
+Depois chame esse método para cada funcionário.
+
+---
+
+# Desafio Master
+
+Adicione uma nova struct:
+
+```go
+type Departamento struct {
+	Nome string
+}
+```
+
+E modifique a struct `Funcionario` para que ela possua:
+
+```go
+Departamento
+```
+
+Agora cada funcionário deverá pertencer a um departamento.
+
+Exemplo:
+
+```text
+Departamento: Tecnologia
+```
+
+ou
+
+```text
+Departamento: Recursos Humanos
+```
+
+---
+
+## Perguntas para Reflexão
+
+1. Qual a vantagem de criar uma struct `Endereco` separada?
+2. O que aconteceria se vários tipos diferentes precisassem de endereço?
+3. Como a composição ajuda a reutilizar código?
+4. Qual a diferença entre composição e herança?
+5. Por que Go prefere composição em vez de herança?
+
+---
+
+## Desafio Extra
+
+Crie a seguinte estrutura:
+
+```text
+Empresa
+│
+├── Nome
+│
+├── Funcionario
+│   ├── Nome
+│   ├── Cargo
+│   └── Endereco
+│
+└── Endereco
+    ├── Rua
+    ├── Cidade
+    └── Estado
+```
+
+Cadastre uma empresa com 3 funcionários e exiba todas as informações utilizando um `slice` de funcionários.
+
