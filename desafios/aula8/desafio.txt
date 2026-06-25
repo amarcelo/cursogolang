@@ -1,0 +1,179 @@
+# Desafio: Sistema de Conta Bancária
+
+## Objetivo
+
+Você foi contratado para desenvolver um pequeno sistema de contas bancárias utilizando **structs**, **métodos** e **receivers** em Go.
+
+Cada conta deve armazenar:
+
+* Nome do titular
+* Número da conta
+* Saldo
+
+---
+
+## Estrutura Inicial
+
+Crie a seguinte struct:
+
+```go
+type Conta struct {
+	Titular string
+	Numero  int
+	Saldo   float64
+}
+```
+
+---
+
+## Parte 1 – Mostrar informações
+
+Crie um método chamado:
+
+```go
+MostrarDados()
+```
+
+Esse método deve exibir:
+
+```
+Titular: Antonio
+Conta: 1234
+Saldo: R$ 1500.00
+```
+
+> Utilize **receiver por valor**, pois o método apenas consulta os dados.
+
+---
+
+## Parte 2 – Depositar dinheiro
+
+Crie um método chamado:
+
+```go
+Depositar(valor float64)
+```
+
+Esse método deve:
+
+* Somar o valor ao saldo.
+* Exibir a mensagem:
+
+```
+Depósito de R$ 300.00 realizado.
+```
+
+> Utilize **receiver por ponteiro**, pois o saldo será alterado.
+
+---
+
+## Parte 3 – Sacar dinheiro
+
+Crie um método:
+
+```go
+Sacar(valor float64)
+```
+
+Regras:
+
+* Se houver saldo suficiente, realize o saque.
+* Caso contrário, exiba:
+
+```
+Saldo insuficiente.
+```
+
+---
+
+## Parte 4 – Transferência
+
+Crie um método:
+
+```go
+Transferir(destino *Conta, valor float64)
+```
+
+Esse método deve:
+
+* Retirar o dinheiro da conta atual.
+* Depositar na conta de destino.
+* Caso não exista saldo suficiente, cancelar a operação.
+
+---
+
+## Parte 5 – Programa Principal
+
+No `main()`:
+
+1. Crie duas contas:
+
+```
+Antonio
+Saldo: R$ 1500
+
+Maria
+Saldo: R$ 800
+```
+
+2. Exiba os dados das duas contas.
+
+3. Deposite R$ 500 na conta de Antonio.
+
+4. Saque R$ 300 da conta de Maria.
+
+5. Transfira R$ 700 de Antonio para Maria.
+
+6. Exiba novamente os dados das duas contas.
+
+---
+
+# Desafio Extra 
+
+Implemente um método:
+
+```go
+AplicarRendimento()
+```
+
+Esse método deve aumentar o saldo em **2%**.
+
+Exemplo:
+
+Saldo:
+
+```
+R$ 1000
+```
+
+Após o rendimento:
+
+```
+R$ 1020
+```
+
+---
+
+# Desafio Master
+
+Implemente um método chamado:
+
+```go
+Extrato()
+```
+
+A saída deve ser semelhante a:
+
+```
+==========================
+      EXTRATO
+==========================
+Titular : Antonio
+Conta   : 1234
+Saldo   : R$ 1800.00
+==========================
+```
+
+---
+
+
