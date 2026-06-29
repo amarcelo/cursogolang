@@ -1,0 +1,174 @@
+# Desafio Prático :  Sistema de Processamento de Pedidos Online
+
+## Objetivo
+
+Desenvolver um programa em Go que simule o funcionamento de uma loja virtual utilizando os conceitos de:
+
+* Goroutines
+* Channels
+* Buffered Channels
+* Select
+* Timeout (`time.After`)
+* Sincronização entre goroutines
+
+Esses são exatamente os principais assuntos abordados nesta aula. 
+
+---
+
+# Cenário
+
+Uma loja virtual recebeu **10 pedidos** de clientes.
+
+Os pedidos chegam rapidamente e são colocados em uma fila de processamento.
+
+Existem **3 funcionários (workers)** responsáveis por separar e despachar os pedidos.
+
+Cada funcionário trabalha em paralelo.
+
+Após concluir um pedido, ele informa que o pedido foi enviado.
+
+Caso um pedido demore mais de **3 segundos** para ser processado, o sistema deve informar um **Timeout**.
+
+---
+
+# Requisitos
+
+Seu programa deve possuir:
+
+### 1. Buffered Channel
+
+Crie um buffered channel capaz de armazenar os **10 pedidos** antes do processamento.
+
+Exemplo:
+
+```go
+pedidos := make(chan int, 10)
+```
+
+---
+
+### 2. Workers
+
+Crie uma função chamada:
+
+```go
+func worker(id int, pedidos chan int, resultado chan string)
+```
+
+Cada worker deve:
+
+* Receber pedidos do channel
+* Exibir:
+
+```
+Worker 1 processando pedido 5
+```
+
+* Esperar um tempo aleatório entre **1 e 4 segundos** (`time.Sleep`)
+* Enviar uma mensagem informando que concluiu o pedido.
+
+Exemplo:
+
+```
+Pedido 5 enviado pelo Worker 1
+```
+
+---
+
+### 3. Goroutines
+
+Inicie **3 workers** usando goroutines.
+
+Exemplo:
+
+```go
+go worker(1, pedidos, resultado)
+go worker(2, pedidos, resultado)
+go worker(3, pedidos, resultado)
+```
+
+---
+
+### 4. Select
+
+Na função `main`, utilize um `select` para esperar:
+
+* a resposta dos workers;
+* ou um timeout.
+
+Exemplo:
+
+```go
+select {
+case msg := <-resultado:
+    fmt.Println(msg)
+
+case <-time.After(3 * time.Second):
+    fmt.Println("Timeout!")
+}
+```
+
+---
+
+### 5. Fechamento do Channel
+
+Depois de enviar todos os pedidos, feche o channel.
+
+Exemplo:
+
+```go
+close(pedidos)
+```
+
+---
+
+# Saída Esperada
+
+A saída será semelhante a esta:
+
+```text
+Worker 1 processando pedido 1
+Worker 2 processando pedido 2
+Worker 3 processando pedido 3
+
+Pedido 2 enviado pelo Worker 2
+Pedido 1 enviado pelo Worker 1
+Pedido 4 enviado pelo Worker 2
+Pedido 3 enviado pelo Worker 3
+Pedido 5 enviado pelo Worker 1
+
+Timeout!
+
+Pedido 6 enviado pelo Worker 3
+Pedido 7 enviado pelo Worker 2
+Pedido 8 enviado pelo Worker 1
+Pedido 9 enviado pelo Worker 3
+Pedido 10 enviado pelo Worker 2
+
+Todos os pedidos foram processados!
+```
+
+Observe que a ordem dos pedidos **não será necessariamente a mesma em que eles chegaram**, pois os três workers executam concorrentemente.
+
+---
+
+# Desafio Extra
+
+Depois de concluir o programa, implemente as seguintes melhorias:
+
+* Aumente para **5 workers**.
+* Faça cada pedido possuir um **nome de cliente** e um **número do pedido** utilizando uma `struct`.
+* Conte quantos pedidos cada worker processou e exiba um relatório final, por exemplo:
+
+```text
+========== RELATÓRIO ==========
+Worker 1 processou 4 pedidos
+Worker 2 processou 3 pedidos
+Worker 3 processou 3 pedidos
+
+Total de pedidos: 10
+Tempo total de processamento: 8 segundos
+===============================
+```
+
+
