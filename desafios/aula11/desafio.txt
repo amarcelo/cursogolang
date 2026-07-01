@@ -1,0 +1,207 @@
+# Desafio Prático - Desenvolvendo um Sistema de Reservas de Hotel em Go
+
+## Objetivo
+
+Você foi contratado para desenvolver o sistema de reservas de um hotel. Durante uma promoção, centenas de clientes tentam reservar quartos ao mesmo tempo pelo site.
+
+Seu desafio será construir um sistema concorrente que processe todas essas reservas com segurança, utilizando os conceitos aprendidos nesta aula:
+
+* Goroutines
+* Race Conditions
+* Mutex
+* WaitGroup
+* defer
+* sync.Once
+
+O objetivo é evitar reservas duplicadas, garantir que o sistema inicialize apenas uma vez e esperar que todas as reservas sejam processadas antes do programa terminar. Esses são exatamente os problemas tratados pelos mecanismos de sincronização apresentados na aula. 
+
+---
+
+# Cenário
+
+O hotel possui apenas **50 quartos disponíveis**.
+
+Ao mesmo tempo, **100 clientes** acessam o site tentando fazer uma reserva.
+
+Cada cliente será representado por uma goroutine.
+
+---
+
+# Regras
+
+## Parte 1 - Inicialização do sistema
+
+Antes de qualquer reserva ser realizada, o sistema deve inicializar o banco de dados.
+
+Essa inicialização deve acontecer **apenas uma única vez**, mesmo que todas as goroutines tentem inicializar ao mesmo tempo.
+
+**Dica:** utilize `sync.Once`.
+
+Exemplo esperado:
+
+```text
+Inicializando banco de reservas...
+Banco inicializado!
+```
+
+Essa mensagem deve aparecer apenas uma vez.
+
+---
+
+## Parte 2 - Controle das reservas
+
+Crie uma variável global:
+
+```go
+quartosDisponiveis := 50
+```
+
+Sempre que um cliente conseguir reservar um quarto:
+
+* diminua essa variável em 1;
+* mostre qual cliente conseguiu reservar;
+* informe quantos quartos ainda restam.
+
+Exemplo:
+
+```text
+Cliente 15 reservou um quarto.
+Restam 32 quartos.
+```
+
+Como várias goroutines estarão alterando a mesma variável, será necessário protegê-la contra acessos simultâneos usando um **Mutex**, evitando *race conditions*. 
+
+---
+
+## Parte 3 - Hotel lotado
+
+Quando não houver mais quartos disponíveis, o cliente deve receber uma mensagem:
+
+```text
+Cliente 78 não conseguiu reservar.
+Hotel lotado!
+```
+
+---
+
+## Parte 4 - WaitGroup
+
+O programa principal só poderá terminar depois que todos os 100 clientes tentarem reservar.
+
+Use um **WaitGroup** para sincronizar as goroutines. 
+
+---
+
+## Parte 5 - defer
+
+Utilize:
+
+```go
+defer mu.Unlock()
+```
+
+e
+
+```go
+defer wg.Done()
+```
+
+para garantir que os recursos sejam liberados corretamente, mesmo se houver um retorno antecipado ou erro durante o processamento. 
+
+---
+
+# Resultado esperado
+
+Ao final do programa, deve ser exibido algo semelhante a:
+
+```text
+===================================
+Relatório Final
+
+Total de quartos: 50
+Reservas realizadas: 50
+Clientes sem reserva: 50
+Quartos restantes: 0
+
+Sistema encerrado.
+```
+
+---
+
+# Desafio Extra 1 (Intermediário)
+
+Agora imagine que alguns clientes cancelam suas reservas.
+
+Crie uma função:
+
+```go
+cancelarReserva()
+```
+
+Ela deverá:
+
+* devolver um quarto ao hotel;
+* aumentar novamente a quantidade de quartos disponíveis;
+* também utilizar Mutex.
+
+---
+
+# Desafio Extra 2 (Avançado)
+
+Crie uma estrutura:
+
+```go
+type Hotel struct {
+    Nome string
+    QuartosDisponiveis int
+}
+```
+
+Faça com que toda a lógica de reserva e cancelamento seja implementada como **métodos** dessa estrutura.
+
+---
+
+# Desafio Extra 3 (Muito Avançado)
+
+Implemente um sistema de **lista de espera**.
+
+Quando o hotel estiver lotado:
+
+* o cliente entra automaticamente em uma fila;
+* quando alguém cancelar uma reserva, o primeiro da fila recebe o quarto disponível.
+
+---
+
+# Desafio Master
+
+Agora transforme o programa em um pequeno servidor de reservas.
+
+Cada cliente deve possuir uma estrutura:
+
+```go
+type Cliente struct {
+	ID   int
+	Nome string
+}
+```
+
+Crie um slice para armazenar todas as reservas realizadas.
+
+Cada nova reserva deve adicionar um cliente ao slice de forma segura utilizando **Mutex**.
+
+Ao final, o programa deve imprimir algo como:
+
+```text
+===== RESERVAS CONFIRMADAS =====
+
+Cliente 1 - João
+Cliente 2 - Maria
+Cliente 3 - Pedro
+...
+
+Total de reservas: 50
+```
+
+---
+
+Boa sorte!
