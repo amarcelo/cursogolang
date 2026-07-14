@@ -1,0 +1,136 @@
+## Desafio: Sistema de pedidos com cancelamento
+
+Crie um programa que simule o processamento de um pedido em uma loja virtual.
+
+O pedido deve passar por estas etapas:
+
+```text
+1. Validando pagamento
+2. Separando produtos
+3. Emitindo nota fiscal
+4. Preparando entrega
+5. Pedido enviado
+```
+
+Cada etapa deve levar **2 segundos** para ser concluída.
+
+O processamento deve acontecer dentro de uma **goroutine** e receber um `context.Context`.
+
+Depois de **5 segundos**, o programa principal deve simular que o cliente cancelou o pedido.
+
+Quando o cancelamento acontecer, o processamento deve parar imediatamente e informar em qual etapa o pedido foi interrompido.
+
+---
+
+## Regras do desafio
+
+Seu programa deve usar:
+
+* `context.WithCancel()`
+* goroutine
+* `select`
+* `ctx.Done()`
+* `time.Sleep()` ou `time.After()`
+* uma função separada para processar o pedido
+
+A função pode ter este formato:
+
+```go
+func processarPedido(ctx context.Context, etapas []string)
+```
+
+---
+
+## Resultado esperado
+
+A saída pode ser parecida com esta:
+
+```text
+Iniciando pedido...
+
+Processando: Validando pagamento
+Etapa concluída: Validando pagamento
+
+Processando: Separando produtos
+Etapa concluída: Separando produtos
+
+Processando: Emitindo nota fiscal
+
+Cliente solicitou o cancelamento do pedido.
+
+Pedido cancelado durante a etapa: Emitindo nota fiscal
+Motivo: context canceled
+```
+
+---
+
+## Dica importante
+
+Em vez de colocar apenas um `time.Sleep()` dentro da etapa, use um `select` com `time.After()`:
+
+```go
+select {
+case <-ctx.Done():
+	// O pedido foi cancelado.
+
+case <-time.After(2 * time.Second):
+	// A etapa foi concluída.
+}
+```
+
+Isso permite que a tarefa perceba o cancelamento sem precisar esperar os 2 segundos terminarem.
+
+---
+
+## Estrutura inicial
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"time"
+)
+
+func processarPedido(ctx context.Context, etapas []string) {
+	// Percorra todas as etapas.
+
+	// Para cada etapa:
+	// 1. Mostre qual etapa está sendo processada.
+	// 2. Aguarde 2 segundos.
+	// 3. Verifique se o contexto foi cancelado.
+	// 4. Caso tenha sido cancelado, encerre a função.
+	// 5. Caso contrário, mostre que a etapa foi concluída.
+}
+
+func main() {
+	// Crie o contexto cancelável.
+
+	// Crie a lista de etapas.
+
+	// Inicie o processamento em uma goroutine.
+
+	// Espere 5 segundos.
+
+	// Simule o cancelamento feito pelo cliente.
+
+	// Espere o processamento encerrar.
+}
+```
+
+## Desafio extra
+
+Depois de concluir a primeira versão, acrescente um canal chamado `resultado` para informar à função `main` se o pedido foi:
+
+```text
+concluído
+```
+
+ou
+
+```text
+cancelado
+```
+
+Assim, você evita usar um `time.Sleep()` no final da função `main` e espera corretamente a goroutine terminar.
