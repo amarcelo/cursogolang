@@ -1,0 +1,425 @@
+
+# Desafio: Sistema Bancário em Go
+
+## Objetivo
+
+Você foi contratado para desenvolver um pequeno sistema bancário.
+
+O sistema deverá possuir **dois pacotes próprios** e um programa principal (`main.go`).
+
+Seu objetivo é organizar corretamente o projeto e aplicar o conceito de encapsulamento.
+
+---
+
+# Estrutura esperada
+
+```text
+banco/
+│
+├── go.mod
+├── main.go
+│
+├── conta/
+│   └── conta.go
+│
+└── calculadora/
+    └── calculadora.go
+```
+
+---
+
+# Requisitos
+
+## Pacote calculadora
+
+Implemente as funções:
+
+```go
+Somar()
+```
+
+```go
+Subtrair()
+```
+
+```go
+Multiplicar()
+```
+
+```go
+Dividir()
+```
+
+A divisão deverá retornar erro caso o divisor seja zero.
+
+---
+
+## Pacote conta
+
+Crie a struct:
+
+```go
+type Conta struct {
+    Titular string
+    saldo float64
+}
+```
+
+Observe que:
+
+* Titular deve ser público.
+* saldo deve ser privado.
+
+---
+
+Implemente uma função construtora:
+
+```go
+NovaConta()
+```
+
+Ela deve receber:
+
+* nome do titular
+* saldo inicial
+
+---
+
+Crie os métodos:
+
+```go
+ConsultarSaldo()
+```
+
+```go
+Depositar()
+```
+
+```go
+Sacar()
+```
+
+Regras:
+
+* não permitir depósito menor ou igual a zero;
+* não permitir saque menor ou igual a zero;
+* não permitir sacar mais do que existe na conta.
+
+Todos devem retornar erro quando necessário.
+
+---
+
+# Programa principal
+
+No `main.go`, faça:
+
+## 1
+
+Crie uma conta.
+
+Exemplo:
+
+```go
+João
+Saldo inicial: 1000
+```
+
+---
+
+## 2
+
+Mostre:
+
+```text
+Titular
+Saldo inicial
+```
+
+---
+
+## 3
+
+Faça um depósito.
+
+Exemplo:
+
+```text
++250
+```
+
+---
+
+## 4
+
+Faça um saque.
+
+Exemplo:
+
+```text
+-100
+```
+
+---
+
+## 5
+
+Mostre o saldo final.
+
+---
+
+## 6
+
+Utilize o pacote calculadora para calcular:
+
+```text
+Saldo + 500
+```
+
+e imprima o resultado.
+
+---
+
+# Resultado esperado
+
+Algo semelhante a:
+
+```text
+======== BANCO ========
+
+Titular: João
+
+Saldo inicial:
+1000.00
+
+Depositando R$250...
+
+Saldo:
+1250.00
+
+Sacando R$100...
+
+Saldo:
+1150.00
+
+Saldo + 500 =
+1650.00
+```
+
+---
+
+# Parte 2 – Encontrando os erros
+
+Sem executar o programa, diga quais linhas possuem erro.
+
+### Código 1
+
+```go
+conta := conta.NovaConta("Carlos", 1000)
+
+fmt.Println(conta.saldo)
+```
+
+O que acontece?
+
+---
+
+### Código 2
+
+```go
+conta.saldo = 5000
+```
+
+O que acontece?
+
+---
+
+### Código 3
+
+```go
+resultado := calculadora.dividir(10,2)
+```
+
+Qual é o erro?
+
+---
+
+### Código 4
+
+```go
+valor, erro := calculadora.Dividir(10,0)
+
+fmt.Println(valor)
+```
+
+O que está faltando?
+
+---
+
+# Parte 3 – Organização
+
+Explique por que o projeto abaixo NÃO segue boas práticas.
+
+```text
+projeto/
+
+main.go
+
+utils.go
+
+helpers.go
+
+coisas.go
+
+diversos.go
+
+teste.go
+```
+
+Como você reorganizaria?
+
+---
+
+# Parte 4 – Desafio Extra
+
+Implemente uma transferência entre contas.
+
+Crie o método:
+
+```go
+Transferir()
+```
+
+Exemplo:
+
+```go
+func (c *Conta) Transferir(destino *Conta, valor float64) error
+```
+
+Ele deverá:
+
+* verificar se existe saldo;
+* sacar da conta origem;
+* depositar na conta destino;
+* retornar erro caso algo dê errado.
+
+---
+
+# Exemplo esperado
+
+```text
+Conta A
+
+Saldo:
+1000
+
+Conta B
+
+Saldo:
+500
+
+Transferindo 300...
+
+Conta A
+
+700
+
+Conta B
+
+800
+```
+
+---
+
+# Desafio Bônus 
+
+Crie um novo pacote chamado:
+
+```text
+cliente
+```
+
+Estrutura:
+
+```text
+cliente/
+    cliente.go
+```
+
+Crie a struct:
+
+```go
+type Cliente struct {
+    Nome string
+    CPF string
+    conta conta.Conta
+}
+```
+
+Observe:
+
+* Nome é público;
+* CPF é público;
+* conta é privada.
+
+Agora implemente:
+
+```go
+NovoCliente()
+```
+
+```go
+Depositar()
+```
+
+```go
+Sacar()
+```
+
+```go
+Saldo()
+```
+
+Todos esses métodos deverão utilizar internamente a conta bancária.
+
+O `main.go` **não pode acessar a conta diretamente**.
+
+---
+
+# Perguntas finais (teoria)
+
+1. O que é um pacote em Go?
+
+2. Qual a diferença entre módulo e pacote?
+
+3. O que faz o arquivo `go.mod`?
+
+4. O que significa executar:
+
+```bash
+go run .
+```
+
+5. Por que `saldo` é privado?
+
+6. O que acontece se uma função começar com letra minúscula?
+
+7. Quando devemos usar um ponteiro (`*Conta`) em métodos?
+
+8. Qual a vantagem de utilizar encapsulamento?
+
+9. Qual a vantagem de separar um sistema em vários pacotes?
+
+10. Qual a diferença entre:
+
+```go
+go run .
+```
+
+e
+
+```go
+go run main.go
+```
+
+---
+
