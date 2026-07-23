@@ -1,0 +1,177 @@
+# Desafio  – Desenvolvendo e Testando uma Calculadora
+
+## Objetivo
+
+Desenvolver uma pequena biblioteca chamada **calculadora**, implementando funções matemáticas e criando uma suíte completa de testes.
+
+Ao final do desafio, todos os testes devem passar e a cobertura deverá ser superior a **90%**.
+
+---
+
+## Parte 1 – Desenvolva as funções
+
+Crie um pacote chamado `calculadora` contendo as seguintes funções:
+
+```go
+Somar(a, b int) int
+Subtrair(a, b int) int
+Multiplicar(a, b int) int
+Dividir(a, b int) (int, error)
+```
+
+A função `Dividir` deve retornar erro quando o divisor for igual a zero.
+
+---
+
+## Parte 2 – Testes unitários
+
+Crie um arquivo:
+
+```
+calculadora_test.go
+```
+
+Escreva testes para todas as funções.
+
+Os testes devem verificar:
+
+* Soma correta
+* Subtração correta
+* Multiplicação correta
+* Divisão correta
+* Divisão por zero
+
+Utilize `t.Errorf()` ou `t.Fatalf()` quando necessário.
+
+---
+
+## Parte 3 – Testes orientados por tabela
+
+Reescreva os testes de **Somar** utilizando uma tabela de testes.
+
+Ela deve conter pelo menos cinco cenários.
+
+Exemplo:
+
+| Nome      | Entrada     | Resultado esperado |
+| --------- | ----------- | ------------------ |
+| positivos | 2 + 3       | 5                  |
+| negativos | -5 + -3     | -8                 |
+| misto     | -2 + 5      | 3                  |
+| zero      | 0 + 8       | 8                  |
+| grandes   | 1000 + 2500 | 3500               |
+
+---
+
+## Parte 4 – Subtestes
+
+Transforme os testes orientados por tabela em subtestes utilizando:
+
+```go
+t.Run(...)
+```
+
+Cada cenário deve aparecer individualmente durante a execução.
+
+---
+
+## Parte 5 – Coverage
+
+Execute
+
+```bash
+go test -cover
+```
+
+Seu objetivo é atingir:
+
+```
+Coverage maior que 90%
+```
+
+Depois gere o relatório HTML:
+
+```bash
+go test -coverprofile=coverage.out
+go tool cover -html=coverage.out
+```
+
+Analise quais linhas ficaram sem cobertura.
+
+---
+
+## Parte 6 – Benchmark
+
+Crie um benchmark para medir a velocidade da função `Multiplicar`.
+
+Nome obrigatório:
+
+```go
+BenchmarkMultiplicar
+```
+
+Execute:
+
+```bash
+go test -bench=.
+```
+
+Analise:
+
+* Quantidade de execuções
+* Tempo médio (`ns/op`)
+
+---
+
+# Desafio Extra (Vale Pontos)
+
+Crie uma nova função:
+
+```go
+Potencia(base, expoente int) int
+```
+
+Exemplo:
+
+```
+Potencia(2,3) = 8
+Potencia(5,2) = 25
+Potencia(7,0) = 1
+```
+
+Depois:
+
+* escreva testes unitários;
+* escreva testes orientados por tabela;
+* escreva um benchmark.
+
+---
+
+# Critérios de Avaliação
+
+| Item                              |         Pontos |
+| --------------------------------- | -------------: |
+| Implementação correta das funções |             20 |
+| Testes unitários                  |             20 |
+| Testes de erro                    |             15 |
+| Testes orientados por tabela      |             15 |
+| Subtestes (`t.Run`)               |             10 |
+| Coverage acima de 90%             |             10 |
+| Benchmark                         |             10 |
+| **Total**                         | **100 pontos** |
+
+---
+
+## Bônus (Desafio extra)
+
+Sem utilizar bibliotecas externas, implemente uma função:
+
+```go
+func EhPrimo(numero int) bool
+```
+
+Em seguida, crie:
+
+* pelo menos **10 casos de teste** utilizando testes orientados por tabela;
+* **subtestes** para cada cenário;
+* um **benchmark** para medir o tempo de execução da função.
