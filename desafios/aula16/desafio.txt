@@ -1,0 +1,149 @@
+
+## Desafio: API de produtos
+
+Crie uma API que rode na porta `8080` e tenha as seguintes rotas:
+
+### 1. Página inicial
+
+Rota:
+
+```text
+GET /
+```
+
+Resposta:
+
+```text
+API de Produtos Online
+```
+
+### 2. Listar todos os produtos
+
+Rota:
+
+```text
+GET /products
+```
+
+Resposta esperada:
+
+```json
+[
+  {
+    "id": 1,
+    "name": "Notebook",
+    "price": 3500
+  },
+  {
+    "id": 2,
+    "name": "Mouse",
+    "price": 80
+  }
+]
+```
+
+### 3. Buscar produto pelo ID
+
+Rota:
+
+```text
+GET /products/1
+```
+
+A API deve retornar somente o produto com o ID informado.
+
+Caso o produto não exista, deve retornar:
+
+```json
+{
+  "error": "Produto não encontrado"
+}
+```
+
+com o status HTTP `404`.
+
+### 4. Validar o método HTTP
+
+As rotas de consulta devem aceitar apenas o método `GET`.
+
+Caso outro método seja utilizado, retorne o status:
+
+```text
+405 Method Not Allowed
+```
+
+## Estrutura inicial
+
+```go
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"net/http"
+	"strconv"
+	"strings"
+)
+
+type Product struct {
+	ID    int     `json:"id"`
+	Name  string  `json:"name"`
+	Price float64 `json:"price"`
+}
+
+var products = []Product{
+	{ID: 1, Name: "Notebook", Price: 3500},
+	{ID: 2, Name: "Mouse", Price: 80},
+	{ID: 3, Name: "Teclado", Price: 150},
+}
+
+func main() {
+	http.HandleFunc("/", homeHandler)
+	http.HandleFunc("/products", productsHandler)
+	http.HandleFunc("/products/", productByIDHandler)
+
+	fmt.Println("Servidor rodando em http://localhost:8080")
+
+	err := http.ListenAndServe(":8080", nil)
+	if err != nil {
+		fmt.Println("Erro ao iniciar o servidor:", err)
+	}
+}
+
+func homeHandler(w http.ResponseWriter, r *http.Request) {
+	// Implemente aqui.
+}
+
+func productsHandler(w http.ResponseWriter, r *http.Request) {
+	// Implemente aqui.
+}
+
+func productByIDHandler(w http.ResponseWriter, r *http.Request) {
+	// Implemente aqui.
+}
+```
+
+## Requisitos extras
+
+Use:
+
+```go
+w.Header().Set("Content-Type", "application/json")
+```
+
+para respostas JSON.
+
+Para converter o ID recebido na URL:
+
+```go
+idText := strings.TrimPrefix(r.URL.Path, "/products/")
+id, err := strconv.Atoi(idText)
+```
+
+Para definir um status HTTP:
+
+```go
+w.WriteHeader(http.StatusNotFound)
+```
+
+O objetivo é completar as três funções sem alterar a estrutura principal do programa.
