@@ -1,0 +1,543 @@
+# Desafio Prático: Completar o CRUD da API de Produtos
+
+Você já possui uma API capaz de:
+
+* listar produtos com `GET`
+* buscar produto por ID com `GET`
+* cadastrar produto com `POST`
+
+Agora o desafio é adicionar duas novas operações:
+
+```text
+DELETE /produto?id=2
+PATCH /produto?id=2
+```
+
+A ideia é aproximar nossa API de um **CRUD completo**:
+
+```text
+CREATE  → POST
+READ    → GET
+UPDATE  → PATCH
+DELETE  → DELETE
+```
+
+## Parte 1: Criar o DELETE
+
+O aluno deverá implementar:
+
+```http
+DELETE /produto?id=2
+```
+
+O objetivo é remover da lista o produto cujo ID foi informado.
+
+Exemplo inicial:
+
+```text
+Produtos:
+
+1 - Notebook
+2 - Mouse
+3 - Teclado
+```
+
+Chamada:
+
+```powershell
+curl.exe -i -X DELETE "http://localhost:8080/produto?id=2"
+```
+
+Depois da chamada, a lista deverá ficar:
+
+```text
+1 - Notebook
+3 - Teclado
+```
+
+A resposta poderá ser:
+
+```json
+{
+  "mensagem": "Produto removido com sucesso"
+}
+```
+
+Status esperado:
+
+```text
+200 OK
+```
+
+Se o ID não existir:
+
+```powershell
+curl.exe -i -X DELETE "http://localhost:8080/produto?id=100"
+```
+
+Resposta:
+
+```json
+{
+  "erro": "Produto não encontrado"
+}
+```
+
+Status:
+
+```text
+404 Not Found
+```
+
+### Dica para remover um elemento de um slice
+
+Imagine:
+
+```go
+produtos := []Produto{
+    {ID: 1, Nome: "Notebook"},
+    {ID: 2, Nome: "Mouse"},
+    {ID: 3, Nome: "Teclado"},
+}
+```
+
+Se encontramos o produto na posição `i`, podemos remover com:
+
+```go
+produtos = append(
+    produtos[:i],
+    produtos[i+1:]...,
+)
+```
+
+Explique aos alunos que:
+
+```go
+produtos[:i]
+```
+
+pega tudo antes do produto.
+
+E:
+
+```go
+produtos[i+1:]
+```
+
+pega tudo depois dele.
+
+Depois usamos `append` para juntar as duas partes.
+
+---
+
+# Parte 2: Criar o PATCH
+
+O PATCH será usado para **alterar parcialmente um produto**.
+
+Por exemplo, temos:
+
+```json
+{
+  "id": 1,
+  "nome": "Notebook",
+  "preco": 4500
+}
+```
+
+Queremos alterar somente o preço.
+
+Chamada:
+
+```http
+PATCH /produto?id=1
+```
+
+Body:
+
+```json
+{
+  "preco": 3999.90
+}
+```
+
+Depois da alteração:
+
+```json
+{
+  "id": 1,
+  "nome": "Notebook",
+  "preco": 3999.90
+}
+```
+
+Observe que o nome não foi enviado e, portanto, deve continuar sendo:
+
+```text
+Notebook
+```
+
+---
+
+# Criando uma struct específica para PATCH
+
+Uma solução interessante é criar:
+
+```go
+type ProdutoPatch struct {
+	Nome  *string  `json:"nome"`
+	Preco *float64 `json:"preco"`
+}
+```
+
+Aqui estamos usando ponteiros.
+
+Isso permite diferenciar:
+
+```text
+campo não enviado
+```
+
+de:
+
+```text
+campo enviado
+```
+
+Por exemplo:
+
+```json
+{
+  "preco": 2999
+}
+```
+
+Fará:
+
+```go
+patch.Nome == nil
+```
+
+e:
+
+```go
+patch.Preco != nil
+```
+
+Então podemos atualizar somente o campo que realmente chegou.
+
+---
+
+# Parte 3: Alterar o produtoPorIDHandler
+
+Atualmente provavelmente existe algo parecido com:
+
+```go
+func produtoPorIDHandler(
+	w http.ResponseWriter,
+	r *http.Request,
+) {
+```
+
+Dentro dele, o aluno deverá passar a identificar três métodos:
+
+```go
+switch r.Method {
+
+case http.MethodGet:
+
+    // Buscar produto
+
+case http.MethodDelete:
+
+    // Remover produto
+
+case http.MethodPatch:
+
+    // Alterar produto
+
+default:
+
+    // Método não permitido
+}
+```
+
+O fluxo será:
+
+```text
+/produto?id=2
+       ↓
+produtoPorIDHandler
+       ↓
+verifica r.Method
+       ↓
+ ┌─────┼────────┐
+ GET  DELETE   PATCH
+  ↓      ↓        ↓
+busca  remove   altera
+```
+
+---
+
+# Parte 4: Criar a função removerProduto
+
+O desafio é construir:
+
+```go
+func removerProduto(
+	w http.ResponseWriter,
+	id int,
+) {
+```
+
+Ela deverá:
+
+1. percorrer a lista;
+2. encontrar o produto;
+3. descobrir sua posição;
+4. remover o produto do slice;
+5. devolver `200 OK`;
+6. devolver `404` se não encontrar.
+
+Uma estrutura inicial pode ser:
+
+```go
+func removerProduto(
+	w http.ResponseWriter,
+	id int,
+) {
+
+	for i, produto := range produtos {
+
+		if produto.ID == id {
+
+			// REMOVER PRODUTO AQUI
+
+			return
+		}
+	}
+
+	// RETORNAR 404
+}
+```
+
+O aluno deverá completar.
+
+---
+
+# Parte 5: Criar a função atualizarProduto
+
+Agora crie:
+
+```go
+func atualizarProduto(
+	w http.ResponseWriter,
+	r *http.Request,
+	id int,
+) {
+```
+
+Primeiro recebemos o JSON:
+
+```go
+var dados ProdutoPatch
+
+err := json.NewDecoder(r.Body).Decode(&dados)
+```
+
+Depois procuramos o produto:
+
+```go
+for i := range produtos {
+
+	if produtos[i].ID == id {
+
+		// Atualizar aqui
+
+	}
+}
+```
+
+Para alterar somente o nome:
+
+```go
+if dados.Nome != nil {
+	produtos[i].Nome = *dados.Nome
+}
+```
+
+Para alterar somente o preço:
+
+```go
+if dados.Preco != nil {
+	produtos[i].Preco = *dados.Preco
+}
+```
+
+O `*` neste caso acessa o valor que está armazenado naquele endereço.
+
+---
+
+# Parte 6: Validação do PATCH
+
+O aluno deverá impedir:
+
+```json
+{
+  "nome": ""
+}
+```
+
+E também:
+
+```json
+{
+  "preco": -200
+}
+```
+
+Por exemplo:
+
+```go
+if dados.Preco != nil && *dados.Preco <= 0 {
+
+	enviarErro(
+		w,
+		http.StatusBadRequest,
+		"Preço deve ser maior que zero",
+	)
+
+	return
+}
+```
+
+---
+
+# Parte 7: Testando o PATCH
+
+Imagine que o produto 1 seja:
+
+```json
+{
+  "id": 1,
+  "nome": "Notebook",
+  "preco": 4500
+}
+```
+
+No PowerShell:
+
+```powershell
+curl.exe -i -X PATCH "http://localhost:8080/produto?id=1" -H "Content-Type: application/json" --data-raw '{\"preco\":3999.90}'
+```
+
+Resposta esperada:
+
+```json
+{
+  "id": 1,
+  "nome": "Notebook",
+  "preco": 3999.9
+}
+```
+
+Agora alterando apenas o nome:
+
+```json
+{
+  "nome": "Notebook Gamer"
+}
+```
+
+Resultado:
+
+```json
+{
+  "id": 1,
+  "nome": "Notebook Gamer",
+  "preco": 3999.9
+}
+```
+
+---
+
+# Parte 8: Testando o DELETE
+
+Remova o produto:
+
+```powershell
+curl.exe -i -X DELETE "http://localhost:8080/produto?id=2"
+```
+
+Depois:
+
+```powershell
+curl.exe "http://localhost:8080/produtos"
+```
+
+O produto de ID 2 não deverá mais aparecer.
+
+---
+
+# Desafio completo para entregar aos alunos
+
+**Modifique a API de produtos criada durante a aula para implementar as operações DELETE e PATCH.**
+
+O endpoint:
+
+```text
+/produto?id=ID
+```
+
+deverá aceitar:
+
+```text
+GET
+PATCH
+DELETE
+```
+
+O `GET` busca o produto.
+
+O `DELETE` remove o produto.
+
+O `PATCH` altera apenas os campos enviados.
+
+Exemplo:
+
+```http
+PATCH /produto?id=3
+```
+
+Body:
+
+```json
+{
+  "preco": 299.90
+}
+```
+
+O aluno deverá utilizar corretamente:
+
+```go
+r.Method
+r.URL.Query()
+json.NewDecoder()
+json.NewEncoder()
+http.StatusOK
+http.StatusBadRequest
+http.StatusNotFound
+http.StatusMethodNotAllowed
+```
+
+E a API deverá possuir, ao final:
+
+```text
+GET     /produtos
+POST    /produtos
+
+GET     /produto?id=1
+PATCH   /produto?id=1
+DELETE  /produto?id=1
+```
+
+Com isso, vocês terão construído praticamente um **CRUD REST completo em Go**, ainda sem banco de dados, mas já com a mesma lógica que depois poderá ser conectada ao PostgreSQL ou outro banco.
