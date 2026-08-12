@@ -1,0 +1,16 @@
+GET todos
+curl.exe http://localhost:8080/produtos
+
+GET por ID
+curl.exe "http://localhost:8080/produtos?id=1"
+
+POST
+curl.exe -X POST http://localhost:8080/produtos -H "Content-Type: application/json" -d '{\"nome\":\"Webcam\",\"preco\":299.90}'
+
+curl.exe -u admin:1234 -X POST http://localhost:8080/produtos -H "Content-Type: application/json" -d '{\"nome\":\"Webcam\",\"preco\":299.90}'
+
+PATCH
+curl.exe -u admin:1234 -X PATCH "http://localhost:8080/produtos?id=2" -H "Content-Type: application/json" -d '{\"preco\":150}'
+
+DELETE
+curl.exe -u admin:1234 -X DELETE "http://localhost:8080/produtos?id=3"
