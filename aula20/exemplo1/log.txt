@@ -1,0 +1,16 @@
+[16/08/2026 09:19:24] Programa encerrado
+[16/08/2026 09:19:40] Arquivo criado: dados.txt
+[16/08/2026 09:19:44] Programa encerrado
+[16/08/2026 09:20:06] Tentativa de escrever em arquivo inexistente: dat.txt
+[16/08/2026 09:20:34] Mensagem adicionada ao arquivo: dados.txt
+[16/08/2026 09:20:35] Programa encerrado
+[16/08/2026 09:20:58] Mensagem adicionada ao arquivo: dados.txt
+[16/08/2026 09:21:03] Programa encerrado
+[16/08/2026 09:21:18] Arquivo criado: apagar.txt
+[16/08/2026 09:21:20] Programa encerrado
+[16/08/2026 09:21:43] Mensagem adicionada ao arquivo: apagar.txt
+[16/08/2026 09:21:45] Programa encerrado
+[16/08/2026 09:22:07] Arquivo apagado: apagar.txt
+[16/08/2026 09:22:09] Programa encerrado
+[16/08/2026 09:26:13] Arquivo criado: arquivo1.txt
+[16/08/2026 09:26:39] Programa encerrado
